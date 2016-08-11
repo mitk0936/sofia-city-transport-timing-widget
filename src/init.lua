@@ -1,6 +1,6 @@
 -- setup wifi 
 wifi.setmode(wifi.STATION)
-wifi.sta.config("SDV","1133557799") -- wifi credentials (SSID, password)
+wifi.sta.config("****","********") -- wifi credentials (SSID, password)
 wifi.sta.connect()
 
 -- Global config variables

@@ -33,3 +33,4 @@ Using Lua firmware for nodemcu, built here: http://nodemcu-build.com/
 with global modules: cjson, file, gpio, http, net, node, spi, tmr, uart, ucg, wifi
 
 The binary of the firmware is imcluded in the repo.
+Entry point - src/init.lua
