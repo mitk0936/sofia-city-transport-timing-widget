@@ -19,23 +19,23 @@ disp.setPrintPos(disp, 0, 0);
 disp.setPrintDir(disp, 0);
 
 local function clearDisplay ()
-    linePositionY = 0;
-    disp.clearScreen(disp);
-    disp.setPrintPos(disp, 0, linePositionY); 
+	linePositionY = 0;
+	disp.clearScreen(disp);
+	disp.setPrintPos(disp, 0, linePositionY); 
 end
 
 local function printLine (string)
-    disp.setPrintPos(disp, 1, linePositionY);
-    disp.print(disp, string);
-    linePositionY = linePositionY + lineHeight;
+	disp.setPrintPos(disp, 1, linePositionY);
+	disp.print(disp, string);
+	linePositionY = linePositionY + lineHeight;
 end
 
-local function printHeader (currentTime)
+local function printHeader (line1, line2)
 	clearDisplay();
 	disp.setColor(disp, 255, 255, 25);
-	printLine(currentTime);
+	printLine(line1);
 	disp.setColor(disp, 255, 255, 255);
-	printLine("Bus "..lineNumber.." comes");
+	printLine(line2);
 end
 
 -- initial clearing of the display

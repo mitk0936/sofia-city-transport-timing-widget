@@ -1,48 +1,48 @@
 local function split (s, pattern, maxsplit)
-    local pattern = pattern or " "
-    local maxsplit = maxsplit or -1
-    local s = s
-    local t = {}
-    local patsz = #pattern
+	local pattern = pattern or " "
+	local maxsplit = maxsplit or -1
+	local s = s
+	local t = {}
+	local patsz = #pattern
 
-    while maxsplit ~= 0 do
-        local curpos = 1
-        local found = string.find(s, pattern)
-        if found ~= nil then
-            table.insert(t, string.sub(s, curpos, found - 1))
-            curpos = found + patsz
-            s = string.sub(s, curpos)
-        else
-            table.insert(t, string.sub(s, curpos))
-            break
-        end
+	while maxsplit ~= 0 do
+		local curpos = 1
+		local found = string.find(s, pattern)
+		if found ~= nil then
+			table.insert(t, string.sub(s, curpos, found - 1))
+			curpos = found + patsz
+			s = string.sub(s, curpos)
+		else
+			table.insert(t, string.sub(s, curpos))
+			break
+		end
 
-        maxsplit = maxsplit - 1;
+		maxsplit = maxsplit - 1;
 
-        if maxsplit == 0 then
-            table.insert(t, string.sub(s, curpos - patsz - 1))
-        end
-    end
+		if maxsplit == 0 then
+			table.insert(t, string.sub(s, curpos - patsz - 1))
+		end
+	end
 
-    return t
+	return t
 end
 
 local function getNthElementInStringArray (stringArray, n)
-    local searchedSting;
+	local searchedSting;
 
-    for i, str in ipairs(stringArray) do
-        if i == n then
-            searchedSting = str;
-            break
-        end
-    end
+	for i, str in ipairs(stringArray) do
+		if i == n then
+			searchedSting = str;
+			break
+		end
+	end
 
-    return searchedSting;
+	return searchedSting;
 end
 
 StringHelper = {
-    split = split,
-    getNthElementInStringArray = getNthElementInStringArray
+	split = split,
+	getNthElementInStringArray = getNthElementInStringArray
 }
 
 return StringHelper;
