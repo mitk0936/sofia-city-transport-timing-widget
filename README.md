@@ -10,6 +10,12 @@ Using API endpoints, exposed here: https://github.com/ivkos/Sofia-Public-Transpo
 
 # Wiring:
 
+<h2>Wiring:<h2>
+
+<p align="center">
+	<img src="IMG_20160804_210255.jpg" width="450"/>
+</p>
+
 NodeMcu pins -> SSD-1331 pins
 
 GPIO16 (D0)  -> RES
