@@ -10,8 +10,6 @@ Using API endpoints, exposed here: https://github.com/ivkos/Sofia-Public-Transpo
 
 # Wiring:
 
-<h2>Wiring:</h2>
-
 <p align="center">
 	<img src="IMG_20160804_210255.jpg" width="450"/>
 </p>
@@ -34,6 +32,8 @@ GND          -> GND
 
 3V3          -> VCC
 
+
+# Firmware:
 
 Using Lua firmware for nodemcu, built here: http://nodemcu-build.com/
 with global modules: cjson, file, gpio, http, net, node, spi, tmr, uart, ucg, wifi
