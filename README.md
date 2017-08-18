@@ -14,24 +14,88 @@ Using API endpoints, exposed here: https://github.com/ivkos/Sofia-Public-Transpo
 	<img src="IMG_20160804_210255.jpg" width="450"/>
 </p>
 
-NodeMcu pins	->	SSD-1331 pins
-
-GPIO16 (D0)		-> RES
-
-GPIO2 (D4)		-> D/C
-
-GPIO15 (D8)		-> CS
-
-GPIO14 (D5)		-> CLK
-
-GPIO13 (D7)		-> DIN
-
-GPIO12 (D6)		-> NC
-
-GND				-> GND
-
-3V3				-> VCC
-
+<table>
+	<th>
+		<td>
+			NodeMcu pins
+		</td>
+		<td>
+			SSD-1331 pins
+		</td>
+	</th>
+	<tr>
+		<td>
+			GPIO16 (D0)
+		</td>
+		<td>
+			RES
+		</td>
+	</tr>
+	<tr>
+		<td>
+			GPIO2 (D4)
+		</td>
+		<td>
+			D/C
+		</td>
+	</tr>
+	<tr>
+		<td>
+			GPIO15 (D8)
+		</td>
+		<td>
+			CS
+		</td>
+	</tr>
+	<tr>
+		<td>
+			GPIO14 (D5)
+		</td>
+		<td>
+			CLK
+		</td>
+	</tr>
+	<tr>
+		<td>
+			GPIO14 (D5)
+		</td>
+		<td>
+			CLK
+		</td>
+	</tr>
+	<tr>
+		<td>
+			GPIO13 (D7)
+		</td>
+		<td>
+			DIN
+		</td>
+	</tr>
+	<tr>
+		<td>
+			GPIO12 (D6)
+		</td>
+		<td>
+			NC
+		</td>
+	</tr>
+	<tr>
+		<td>
+			GND
+		</td>
+		<td>
+			GND
+		</td>
+	</tr>
+	<tr>
+		<td>
+			3V3
+		</td>
+		<td>
+			VCC
+		</td>
+	</tr>
+</table>
 
 # Configuration:
 Before uploading the file, configurate your wifi network at src/config.json
@@ -45,8 +109,11 @@ The binary of the firmware is imcluded in the repo.
 <br/>
 
 For flashing, flash esp_init_data_default.bin at:
-	- ESP-01, -03, -07 etc. with 512 kByte flash require 0x7c000
-	- Init data goes to 0x3fc000 on an ESP-12E with 4 MByte flash
+<ul
+	<li>- ESP-01, -03, -07 etc. with 512 kByte flash require 0x7c000</li>
+	<li>- Init data goes to 0x3fc000 on an ESP-12E with 4 MByte flash</li>
+</ul>
+
 <br/>
 
 Flash nodemcu-master-11-modules-2016-08-11-16-28-01-float.bin at 0x00000
