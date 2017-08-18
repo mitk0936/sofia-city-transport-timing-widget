@@ -1,4 +1,4 @@
-local function split (s, pattern, maxsplit)
+split = function (s, pattern, maxsplit)
 	local pattern = pattern or " "
 	local maxsplit = maxsplit or -1
 	local s = s
@@ -17,7 +17,7 @@ local function split (s, pattern, maxsplit)
 			break
 		end
 
-		maxsplit = maxsplit - 1;
+		maxsplit = maxsplit - 1
 
 		if maxsplit == 0 then
 			table.insert(t, string.sub(s, curpos - patsz - 1))
@@ -27,22 +27,15 @@ local function split (s, pattern, maxsplit)
 	return t
 end
 
-local function getNthElementInStringArray (stringArray, n)
-	local searchedSting;
+getNthElementInStringArray = function (stringArray, n)
+	local searchedSting
 
 	for i, str in ipairs(stringArray) do
 		if i == n then
-			searchedSting = str;
+			searchedSting = str
 			break
 		end
 	end
 
-	return searchedSting;
+	return searchedSting
 end
-
-StringHelper = {
-	split = split,
-	getNthElementInStringArray = getNthElementInStringArray
-}
-
-return StringHelper;
