@@ -89,15 +89,20 @@ cli.command('upload [prodFlag]').action(function (prodFlag) {
 
 	findPort(function (port) {
 		var allFiles = ''
+		var allHtml = ''
 
 		ls('src/*.lua').forEach(function (filename) {
 			allFiles += ` ${pathToSrc}/${filename}`
 		})
 
+		ls('html/*.htm').forEach(function (filename) {
+			allHtml += ` ${pathToSrc}/${filename}`
+		})
+
 		cd(nodemcuToolPath)
 
 		require('child_process')
-			.execSync(`node nodemcu-tool upload ${allFiles} ${compilePrefix} --port=${port} ${options}`, { stdio: 'inherit' })
+			.execSync(`node nodemcu-tool upload ${allFiles} ${allHtml} ${compilePrefix} --port=${port} ${options}`, { stdio: 'inherit' })
 
 		require('child_process')
 			.execSync(`node nodemcu-tool upload ${pathToSrc}/init.lua --port=${port} ${options}`, { stdio: 'inherit' })

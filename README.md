@@ -15,14 +15,14 @@ Using API endpoints, exposed here: https://github.com/ivkos/Sofia-Public-Transpo
 </p>
 
 <table>
-	<th>
-		<td>
+	<tr>
+		<th>
 			NodeMcu pins
-		</td>
-		<td>
+		</th>
+		<th>
 			SSD-1331 pins
-		</td>
-	</th>
+		</th>
+	</tr>
 	<tr>
 		<td>
 			GPIO16 (D0)
@@ -109,9 +109,9 @@ The binary of the firmware is imcluded in the repo.
 <br/>
 
 For flashing, flash esp_init_data_default.bin at:
-<ul
-	<li>- ESP-01, -03, -07 etc. with 512 kByte flash require 0x7c000</li>
-	<li>- Init data goes to 0x3fc000 on an ESP-12E with 4 MByte flash</li>
+<ul>
+	<li>ESP-01, -03, -07 etc. with 512 kByte flash require 0x7c000</li>
+	<li>Init data goes to 0x3fc000 on an ESP-12E with 4 MByte flash</li>
 </ul>
 
 <br/>

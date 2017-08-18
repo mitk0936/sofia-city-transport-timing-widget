@@ -15,17 +15,24 @@ if (file.open('config.json')) then
 	dispatch('configReady', config, true)
 
 	-- setup wifi 
-	wifi.setmode(wifi.STATION)
-	wifi.sta.config(config.wifi.ssid, config.wifi.password) -- wifi credentials (SSID, password)
+	wifi.setmode(wifi.STATIONAP)
+	wifi.sta.config(config.wifi.ssid, config.wifi.pwd or '') -- wifi credentials (SSID, password)
+	wifi.ap.config({ ssid = config.ap.ssid })
 	wifi.sta.connect()
+
+	require('dns-liar')
+	require('server')
 
 	tmr.alarm(1, 1500, 1, function()
 		if wifi.sta.getip() == nil then
-			print("Connecting...")
+			print('Connecting...')
 		else
 			tmr.stop(1)
-			print("Connected, IP is "..wifi.sta.getip())
+			print('Connected, IP is '..wifi.sta.getip())
 			dispatch('wifiConnected', ip, true)
+			
 		end
 	end)
+else
+	print('Cannot open config.json.')
 end
