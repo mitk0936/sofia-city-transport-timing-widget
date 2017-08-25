@@ -21,10 +21,10 @@ function decodedns(dns_pl)
 	end
 end
 
-local svr = net.createServer(net.UDP)
-svr:on('receive',function (svr, dns_pl)
+local svr = net.createUDPSocket() -- net.createServer(net.UDP)
+svr:on('receive', function (dns_pl, port, ip) -- port, ip
 	decodedns(dns_pl)
-	svr:send(dns_tr..dns_str1..dns_q..dns_str2..dns_strIP)
+	svr:send(port, ip, dns_tr..dns_str1..dns_q..dns_str2..dns_strIP) -- port, ip, ...
 	collectgarbage()
 end)
 

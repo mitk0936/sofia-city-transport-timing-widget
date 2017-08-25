@@ -1,9 +1,20 @@
 srv = net.createServer(net.TCP)
 
+local __extractJSONRequest = function (payload)
+	local json = payload:match('(%b{})')
+	if (json) then
+		json = pcall(cjson.decode, json)
+	else
+		json = {}
+	end
+
+	return json
+end
+
 local __sendFile = function (conn, filename)
 	local dataToGet = 0
 	conn:on('sent', function(conn) 
-		if file.open(filename, 'r') then            
+		if file.open(filename, 'r') then
 			file.seek('set', dataToGet)
 			local line = file.read(1024)
 			
@@ -24,14 +35,18 @@ end
 
 srv:listen(80, function (conn)
 	conn:on('receive', function (conn, payload)
-		_, _, method, url, vars = string.find(payload, '([A-Z]+) /([^?]*)%??(.*) HTTP')
-		print('HTTTP method: '..method, 'URL: '..url, 'GET variables: '.. vars)
-		conn:send('HTTP/1.1 200 OK\r\n\r\n')
-		__sendFile(conn, 'index.htm')
-	end)
+		--_, _, method, url, vars = string.find(payload, '([A-Z]+) /([^?]*)%??(.*) HTTP')
+		--print('HTTTP method: ', method, 'URL: ', url, 'GET variables: ', vars)
+		local json = __extractJSONRequest(payload)
 
-	conn:on('sent', function (conn)
-		print('sent')
+		conn:send('HTTP/1.1 200 OK\r\n\r\n')
+
+		if (url == 'login') then
+			print(json)
+			conn:close()
+		else
+			__sendFile(conn, 'index.htm')
+		end
 	end)
 end)
 

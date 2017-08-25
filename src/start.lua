@@ -10,7 +10,7 @@ if (file.open('config.json')) then
 	file.close()
 
 	config['lineNumber'] = '111'
-	config['stopCode'] = '0968'
+	config['stopCode'] = '1166005'
 
 	dispatch('configReady', config, true)
 

@@ -1,6 +1,5 @@
-local timingUrl = 'http://drone.sumc.bg/api/v1/timing'
-local configUrl = 'http://drone.sumc.bg/api/v1/config'
-local contentType = 'Content-Type: application/json\r\n'
+local timingUrl = 'http://https-proxy-mitk0936.c9users.io/'
+local headers = 'Content-Type: appnplication/json\r\n'
 
 local __retryRequest = function (failedFunction, successCallback)
 	print("HTTP request failed...")
@@ -9,59 +8,37 @@ local __retryRequest = function (failedFunction, successCallback)
 	end)
 end
 
-local __getApiConfig = function (onSuccess)
-	http.get(
-		configUrl,
-		contentType,
-		function (code, data)
-			if (code < 0) then
-				__retryRequest(__getApiConfig, onSuccess)
-			else
-				configJson = cjson.decode(data)
-				onSuccess(configJson)
-			end
-		end
-	)
-end
-
 subscribe('configReady', function (config)
-	local __getTiming = function (onSuccess)
-		http.post(
-			timingUrl,
-			contentType,
-			'{"stopCode":"'..config['stopCode']..'"}',
+	dispatch('printHeader', { 'Fetching data...', 'Bus '..config['lineNumber']..' comes' })
+
+	__getTiming = function (onSuccess)
+		local url = timingUrl..'?stop_id='..config['stopId']
+		print('Requesting', url)
+		http.get(
+			url,
+			headers,
 			function (code, data)
 				if (code < 0) then
+					print('Failed request', code)
 					__retryRequest(__getTiming, onSuccess)
 				else
-					busTimingJson = cjson.decode(data)
-					onSuccess(busTimingJson)
+					onSuccess(cjson.decode(data))	
 				end
 			end
 		)
 	end
 
-	dispatch('printHeader', { 'Fetching data...', 'Bus '..config['lineNumber']..' comes' })
-
 	subscribe('wifiConnected', function ()
-		__getApiConfig(function (apiConfigData)
-			-- extract current time
-			local configTimeArray = split(apiConfigData['date'], ' ')
-			local currentHour = getNthElementInStringArray(configTimeArray, 2)
-
-			dispatch('printHeader', { currentHour, 'Bus '..config['lineNumber']..' comes'})
-
-			node.task.post(function ()
-				__getTiming(function (busTimingJson)
-					for i, line in ipairs(busTimingJson) do
-						if (line['lineName'] == config['lineNumber']) then
-							for j, timeArrive in ipairs(split(line['timing'], ',')) do
-								dispatch('printLine', timeArrive)
-							end
-							break
+		node.task.post(function ()
+			__getTiming(function (busTimingJson)
+				for i, line in ipairs(busTimingJson['virtual_panel_data']['lines']) do
+					if (line['name'] == config['lineNumber']) then
+						for j, car in ipairs(line['cars']) do
+							dispatch('printLine', car['departure_time'])
 						end
+						break
 					end
-				end)
+				end
 			end)
 		end)
 	end)
