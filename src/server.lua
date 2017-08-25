@@ -1,6 +1,4 @@
-srv = net.createServer(net.TCP)
-
-local __extractJSONRequest = function (payload)
+local extractJsonFromPayload = function (payload)
 	local json = payload:match('(%b{})')
 	if (json) then
 		json = pcall(cjson.decode, json)
@@ -11,8 +9,12 @@ local __extractJSONRequest = function (payload)
 	return json
 end
 
-local __sendFile = function (conn, filename)
+subscribe('sendFile', function (data)
+	local conn = data.conn
+	local filename = data.filename
 	local dataToGet = 0
+
+	conn:send('HTTP/1.1 200 OK\r\n\r\n')
 	conn:on('sent', function(conn) 
 		if file.open(filename, 'r') then
 			file.seek('set', dataToGet)
@@ -29,25 +31,27 @@ local __sendFile = function (conn, filename)
 			end
 		end
 		conn:close()
-		collectgarbage()
 	end)
-end
-
-srv:listen(80, function (conn)
-	conn:on('receive', function (conn, payload)
-		--_, _, method, url, vars = string.find(payload, '([A-Z]+) /([^?]*)%??(.*) HTTP')
-		--print('HTTTP method: ', method, 'URL: ', url, 'GET variables: ', vars)
-		local json = __extractJSONRequest(payload)
-
-		conn:send('HTTP/1.1 200 OK\r\n\r\n')
-
-		if (url == 'login') then
-			print(json)
-			conn:close()
-		else
-			__sendFile(conn, 'index.htm')
-		end
-	end)
+	
 end)
 
-print('HTTP Server is now listening. Free Heap:', node.heap())
+subscribe('wifiConfigured', function ()
+	local srv = net.createServer(net.TCP)
+
+	srv:listen(80, function (conn)
+		conn:on('receive', function (conn, payload)
+			local _, _, method, url, vars = string.find(payload, '([A-Z]+) /([^?]*)%??(.*) HTTP')
+			local json = extractJsonFromPayload(payload)
+
+			dispatch('httpReceive', {
+				method = method,
+				url = url,
+				vars = vars,
+				json = json,
+				conn = conn
+			})
+		end)
+	end)
+
+	print('HTTP Server is now listening. Free Heap:', node.heap())
+end)

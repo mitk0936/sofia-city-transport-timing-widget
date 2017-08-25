@@ -1,7 +1,7 @@
 local timingUrl = 'http://https-proxy-mitk0936.c9users.io/'
 local headers = 'Content-Type: appnplication/json\r\n'
 
-local __retryRequest = function (failedFunction, successCallback)
+local retryRequest = function (failedFunction, successCallback)
 	print("HTTP request failed...")
 	node.task.post(node.task.HIGH_PRIORITY, function ()
 		failedFunction(successCallback)
@@ -11,8 +11,8 @@ end
 subscribe('configReady', function (config)
 	dispatch('printHeader', { 'Fetching data...', 'Bus '..config['lineNumber']..' comes' })
 
-	__getTiming = function (onSuccess)
-		local url = timingUrl..'?stop_id='..config['stopId']
+	getTiming = function (onSuccess)
+		local url = timingUrl..'?stop_id='..config['stopCode']
 		print('Requesting', url)
 		http.get(
 			url,
@@ -20,7 +20,7 @@ subscribe('configReady', function (config)
 			function (code, data)
 				if (code < 0) then
 					print('Failed request', code)
-					__retryRequest(__getTiming, onSuccess)
+					retryRequest(getTiming, onSuccess)
 				else
 					onSuccess(cjson.decode(data))	
 				end
@@ -30,7 +30,7 @@ subscribe('configReady', function (config)
 
 	subscribe('wifiConnected', function ()
 		node.task.post(function ()
-			__getTiming(function (busTimingJson)
+			getTiming(function (busTimingJson)
 				for i, line in ipairs(busTimingJson['virtual_panel_data']['lines']) do
 					if (line['name'] == config['lineNumber']) then
 						for j, car in ipairs(line['cars']) do

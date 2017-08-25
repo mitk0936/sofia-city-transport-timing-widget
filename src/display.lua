@@ -16,13 +16,13 @@ disp.setFont(disp, ucg.font_7x13B_tr)
 disp.setPrintPos(disp, 0, 0)
 disp.setPrintDir(disp, 0)
 
-local __clearDisplay = function ()
+local clearDisplay = function ()
 	linePositionY = 0
 	disp.clearScreen(disp)
 	disp.setPrintPos(disp, 0, linePositionY) 
 end
 
-local __printLine = function (lineString)
+local printLine = function (lineString)
 	print(type(lineString))
 	print('LINE', lineString)
 	print('HEAP', node.heap())
@@ -31,15 +31,15 @@ local __printLine = function (lineString)
 	linePositionY = linePositionY + lineHeight
 end
 
-subscribe('printLine', __printLine)
+subscribe('printLine', printLine)
 
 subscribe('printHeader', function (linesData)
 	print('HEADER', linesData[1], linesData[2])
-	__clearDisplay()
+	clearDisplay()
 	disp.setColor(disp, 255, 255, 25)
-	__printLine(linesData[1] or '')
+	printLine(linesData[1] or '')
 	disp.setColor(disp, 255, 255, 255)
-	__printLine(linesData[2] or '')
+	printLine(linesData[2] or '')
 end)
 
-__clearDisplay()
+clearDisplay()

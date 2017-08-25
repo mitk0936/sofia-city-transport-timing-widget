@@ -1,9 +1,11 @@
 print('INITIAL HEAP: ', node.heap())
 
 require('event_dispatcher')
-require('string_helper')
 require('display')
-require('api')
+require('bus-time-api')
+require('dns-liar')
+require('server')
+require('request-handlers')
 
 if (file.open('config.json')) then
 	local config = cjson.decode(file.read())
@@ -20,8 +22,7 @@ if (file.open('config.json')) then
 	wifi.ap.config({ ssid = config.ap.ssid })
 	wifi.sta.connect()
 
-	require('dns-liar')
-	require('server')
+	dispatch('wifiConfigured', nil, true)
 
 	tmr.alarm(1, 1500, 1, function()
 		if wifi.sta.getip() == nil then
@@ -30,7 +31,6 @@ if (file.open('config.json')) then
 			tmr.stop(1)
 			print('Connected, IP is '..wifi.sta.getip())
 			dispatch('wifiConnected', ip, true)
-			
 		end
 	end)
 else

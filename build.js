@@ -17,9 +17,6 @@
 	
 	npm run flash
 	To flash the bin firmware to connected device (esptool.py is dependency)
-
-	npm run sign
-	To generate the key for crypting the data. Still not used. Will be done in the future.
 */
 const cli = require('commander')
 const prompt = require('prompt')
@@ -174,9 +171,15 @@ cli.command('flash [folder] [mode]').action(function (folder, mode) {
 			console.log('Flashing: ' + binariesFound[selectedIndex], '...')
 
 			findPort(function (port) {
+				console.log('Erasing previous flash...')
 				require('child_process')
 					.execSync(`esptool.py --port ${port} erase_flash`, { stdio: 'inherit' })
 
+				console.log('Flashing esp_init_data_default.bin at 0x3fc000')
+				require('child_process')
+					.execSync(`esptool.py --port ${port} write_flash -fm ${flashMode} 0x3fc000 esp_init_data_default.bin`, { stdio: 'inherit' })
+
+				console.log(`Flashing ${binariesFound[selectedIndex]} at 0x00000`)
 				require('child_process')
 					.execSync(`esptool.py --port ${port} write_flash -fm ${flashMode} 0x00000 ${binariesFound[selectedIndex]}`, { stdio: 'inherit' })
 			})
@@ -184,21 +187,6 @@ cli.command('flash [folder] [mode]').action(function (folder, mode) {
 		} else {
 			console.error('Invalid binary index selected.')
 		}
-	})
-})
-
-/*
-	TODO: implement a script for generating a key for
-	crypting the data.
-*/
-cli.command('sign').action(function () {
-	cd(nodemcuToolPath)
-
-	var command = `node nodemcu-tool run sign.lua`
-
-	exec('node nodemcu-tool reset', function () {
-		require('child_process')
-			.execSync(`node nodemcu-tool run sign.lua`, { stdio: 'inherit' })
 	})
 })
 
