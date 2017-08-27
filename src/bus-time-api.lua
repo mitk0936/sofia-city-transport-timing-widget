@@ -1,4 +1,4 @@
-local timingUrl = 'http://https-proxy-mitk0936.c9users.io/'
+local timingUrl = 'http://https-proxy-server.herokuapp.com/'
 local headers = 'Content-Type: appnplication/json\r\n'
 
 local retryRequest = function (failedFunction, successCallback)

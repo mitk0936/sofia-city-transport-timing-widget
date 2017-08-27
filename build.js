@@ -29,6 +29,7 @@ const pathToSrc = '../../..'
 
 /* setting default options, used by the NodeMCU-Tool */
 const options = `--connection-delay 400 --optimize --baud 115200`
+const flashАddresses = ['0x7c000', '0xfc000', '0x1fc000', '0x3fc000', '0x7fc000', '0xffc000', '0x00000']
 
 /*
 	findPort - function which finds connected device on USB port,
@@ -63,6 +64,27 @@ const findPort = function (onSuccess) {
 		}
 	})
 }
+
+const selectAddress = function (onSuccess) {
+	console.log('Please choose memory address for the binary to flash on...')
+
+	flashАddresses.forEach(function (address, index) {
+		console.log(`${index}) ${address}`)
+	})
+
+	prompt.get([{
+		name: 'binary-flash-address-index',
+		required: true
+	}], function (err, result) {
+		if (err) {
+			throw 'Error with selecting memory address'
+		}
+
+		const selectedIndex = parseInt(result['binary-flash-address-index'])
+		onSuccess(flashАddresses[selectedIndex])
+	})
+}
+
 /*
 	Command for clearing the device file system.
 	Usage: npm run mkfs
@@ -168,22 +190,23 @@ cli.command('flash [folder] [mode]').action(function (folder, mode) {
 		const selectedIndex = parseInt(result['binary-flash-index'])
 
 		if (binariesFound[selectedIndex]) {
-			console.log('Flashing: ' + binariesFound[selectedIndex], '...')
+			selectAddress((address) => {
+				console.log('Flashing: ' + binariesFound[selectedIndex], ' on address: ', address, '...')
 
-			findPort(function (port) {
-				console.log('Erasing previous flash...')
-				require('child_process')
-					.execSync(`esptool.py --port ${port} erase_flash`, { stdio: 'inherit' })
+				findPort(function (port) {
+					console.log('Erasing previous flash...')
+					require('child_process')
+						.execSync(`esptool.py --port ${port} erase_flash`, { stdio: 'inherit' })
 
-				console.log('Flashing esp_init_data_default.bin at 0x3fc000')
-				require('child_process')
-					.execSync(`esptool.py --port ${port} write_flash -fm ${flashMode} 0x3fc000 esp_init_data_default.bin`, { stdio: 'inherit' })
+					console.log('Flashing esp_init_data_default.bin at 0x3fc000')
+					require('child_process')
+						.execSync(`esptool.py --port ${port} write_flash -fm ${flashMode} 0x3fc000 firmware/esp_init_data_default.bin`, { stdio: 'inherit' })
 
-				console.log(`Flashing ${binariesFound[selectedIndex]} at 0x00000`)
-				require('child_process')
-					.execSync(`esptool.py --port ${port} write_flash -fm ${flashMode} 0x00000 ${binariesFound[selectedIndex]}`, { stdio: 'inherit' })
+					console.log(`Flashing ${binariesFound[selectedIndex]} at ${address}`)
+					require('child_process')
+						.execSync(`esptool.py --port ${port} write_flash -fm ${flashMode} ${address} ${binariesFound[selectedIndex]}`, { stdio: 'inherit' })
+				})
 			})
-
 		} else {
 			console.error('Invalid binary index selected.')
 		}
