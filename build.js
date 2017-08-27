@@ -156,10 +156,11 @@ cli.command('start').action(function () {
 	findPort(function (port) {
 		cd(nodemcuToolPath)
 
-		exec(`node nodemcu-tool reset --port=${port}`, function () {
-			require('child_process')
+		require('child_process')
+			.execSync(`node nodemcu-tool reset --port=${port}`)
+
+		require('child_process')
 				.execSync(`node nodemcu-tool terminal --port=${port}`, { stdio: 'inherit' })
-		})
 	})
 })
 
