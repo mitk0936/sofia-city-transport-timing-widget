@@ -1,5 +1,10 @@
 print('INITIAL HEAP: ', node.heap())
 
+require('file')
+require('cjson') -- WARN: In newest firmware version -> sjson
+require('wifi')
+require('tmr')
+
 require('event_dispatcher')
 require('display')
 require('bus-time-api')
@@ -8,7 +13,7 @@ require('server')
 require('request-handlers')
 
 if (file.open('config.json')) then
-	local config = cjson.decode(file.read())
+	local config = cjson.decode(file.read()) -- WARN: In newest firmware version -> sjson
 	file.close()
 
 	config['lineNumber'] = '111'
@@ -18,7 +23,7 @@ if (file.open('config.json')) then
 
 	-- setup wifi 
 	wifi.setmode(wifi.STATIONAP)
-	wifi.sta.config(config.wifi.ssid, config.wifi.pwd or '') -- wifi credentials (SSID, password)
+	wifi.sta.config(config.wifi.ssid, config.wifi.pwd or '') -- WARN: In newest firmware version -> { ssid = config.wifi.ssid, pwd = config.wifi.pwd or '' }
 	wifi.ap.config({ ssid = config.ap.ssid })
 	wifi.sta.connect()
 

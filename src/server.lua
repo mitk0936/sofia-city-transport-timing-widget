@@ -1,9 +1,15 @@
+require('node')
+require('cjson') -- WARN: In newest firmware version -> sjson
+require('net')
+require('file')
+require('event_dispatcher')
+
 local extractJsonFromPayload = function (payload)
 	local json = payload:match('(%b{})')
-	if (json) then
-		json = pcall(cjson.decode, json)
-	else
-		json = {}
+	local parsed, json = pcall(cjson.decode, json) -- WARN: In newest firmware version -> sjson
+	
+	if (not parsed) then
+		return { }
 	end
 
 	return json
@@ -13,26 +19,27 @@ subscribe('sendFile', function (data)
 	local conn = data.conn
 	local filename = data.filename
 	local dataToGet = 0
+	local chunk = 1024
 
 	conn:send('HTTP/1.1 200 OK\r\n\r\n')
+	conn:send(data.contentType)
+	
 	conn:on('sent', function(conn) 
 		if file.open(filename, 'r') then
 			file.seek('set', dataToGet)
-			local line = file.read(1024)
-			
+			local line = file.read(chunk)
 			file.close()
 
 			if line then
 				conn:send(line)
-				dataToGet = dataToGet + 1024
-				if (string.len(line) == 1024) then
+				dataToGet = dataToGet + chunk
+				if (string.len(line) == chunk) then
 					return
 				end
 			end
 		end
 		conn:close()
 	end)
-	
 end)
 
 subscribe('wifiConfigured', function ()

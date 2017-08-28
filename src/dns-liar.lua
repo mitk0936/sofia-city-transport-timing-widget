@@ -1,3 +1,8 @@
+require('node')
+require('wifi')
+require('net')
+require('event_dispatcher')
+
 subscribe('wifiConfigured', function ()
 	local dns_ip = wifi.ap.getip()
 
@@ -23,10 +28,10 @@ subscribe('wifiConfigured', function ()
 		end
 	end
 
-	local svr = net.createServer(net.UDP) -- net.createUDPSocket()
-	svr:on('receive', function (svr, dns_pl) -- port, ip
+	local svr = net.createServer(net.UDP) -- WARN: In newest firmware version -> net.createUDPSocket()
+	svr:on('receive', function (svr, dns_pl) -- WARN: In newest firmware version -> function (dns_pl, port, ip)
 		decodedns(dns_pl)
-		svr:send(dns_tr..dns_str1..dns_q..dns_str2..dns_strIP) -- port, ip, ...
+		svr:send(dns_tr..dns_str1..dns_q..dns_str2..dns_strIP) -- -- WARN: In newest firmware version -> (port, ip, dns_tr..dns_str1..dns_q..dns_str2..dns_strIP)
 		collectgarbage()
 	end)
 

@@ -140,7 +140,10 @@ cli.command('config').action(function () {
 		cd(nodemcuToolPath)
 
 		require('child_process')
-			.execSync(`node nodemcu-tool upload ${pathToSrc}/src/config.json --port=${port} ${options}`, { stdio: 'inherit' })
+			.execSync(`node nodemcu-tool upload ${pathToSrc}/config.json --port=${port} ${options}`, { stdio: 'inherit' })
+
+		require('child_process')
+			.execSync(`node nodemcu-tool upload ${pathToSrc}/stops.json --port=${port} ${options}`, { stdio: 'inherit' })
 
 		require('child_process')
 			.execSync(`node nodemcu-tool fsinfo --port=${port}`, { stdio: 'inherit' })

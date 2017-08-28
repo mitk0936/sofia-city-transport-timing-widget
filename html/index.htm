@@ -1,1 +1,47 @@
-Test Page
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Config page timing</title>
+	</head>
+	<body>
+		<div id='filter'>Loading stops data, please be patient, it will take a minute...</div>
+
+		<script type='text/javascript'>
+			var stopsFilter = function (domEl, jsonData) {
+				var item, list = document.createElement('ul');
+
+				for (var key in jsonData) {
+					item = document.createElement('li');
+					item.innerHTML = key + ' ' + jsonData[key].i + ' ' + jsonData[key].n;
+					list.appendChild(item);
+				}
+
+				domEl.innerHTML = '';
+				domEl.appendChild(list);
+			}
+
+			var loadJSON = function (url, onSuccess, onErr) {
+				var xmlHttp = new XMLHttpRequest();
+				
+				xmlHttp.open('GET', url);
+				xmlHttp.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+				xmlHttp.send();
+
+				xmlHttp.onreadystatechange = function () {
+					if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+						onSuccess(xmlHttp.responseText);
+					}
+				}
+			}
+
+			window.onload = function () {
+				loadJSON('/get-stops', function (responseText) {
+					new stopsFilter(document.getElementById('filter'), JSON.parse(responseText));
+
+					// TODO: load lines for selected stop
+				})
+			}
+		</script>
+	</body>
+</html>

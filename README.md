@@ -98,7 +98,7 @@ Using API endpoints, exposed here: https://github.com/ivkos/Sofia-Public-Transpo
 </table>
 
 # Configuration:
-Before uploading the file, configurate your wifi network at src/config.json
+Before uploading the file, configurate your wifi network at config.json
 
 # Firmware:
 

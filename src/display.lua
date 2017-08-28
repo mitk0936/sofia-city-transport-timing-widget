@@ -1,3 +1,8 @@
+require('node')
+require('spi')
+require('ucg')
+require('event_dispatcher')
+
 -- initial setup of the display - SSD1331
 spi.setup(1, spi.MASTER, spi.CPOL_HIGH, spi.CPHA_HIGH, spi.DATABITS_8, 0)
 
@@ -23,15 +28,12 @@ local clearDisplay = function ()
 end
 
 local printLine = function (lineString)
-	print(type(lineString))
 	print('LINE', lineString)
 	print('HEAP', node.heap())
 	disp.setPrintPos(disp, 1, linePositionY)
 	disp.print(disp, lineString or '')
 	linePositionY = linePositionY + lineHeight
 end
-
-subscribe('printLine', printLine)
 
 subscribe('printHeader', function (linesData)
 	print('HEADER', linesData[1], linesData[2])
@@ -41,5 +43,7 @@ subscribe('printHeader', function (linesData)
 	disp.setColor(disp, 255, 255, 255)
 	printLine(linesData[2] or '')
 end)
+
+subscribe('printLine', printLine)
 
 clearDisplay()

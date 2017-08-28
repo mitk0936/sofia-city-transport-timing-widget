@@ -7,7 +7,6 @@
     "mkfs": "node build.js mkfs",
     "upload": "node build.js upload",
     "config": "node build.js config",
-    "sign": "node build.js sign",
     "start": "node build.js start",
     "flash": "node build.js flash"
   },

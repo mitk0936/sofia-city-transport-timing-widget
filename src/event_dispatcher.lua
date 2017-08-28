@@ -1,5 +1,6 @@
 local callbacks = { }
 local lastData = { }
+
 subscribe = function (eventName, callback)
 	eventName = tostring(eventName)
 	if (type(callback) == 'function') then
