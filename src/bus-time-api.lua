@@ -1,9 +1,9 @@
 require('node')
 require('http')
+require('cjson')
 require('event_dispatcher')
 
 local timingUrl = 'http://https-proxy-server.herokuapp.com/'
-local headers = 'Content-Type: application/json\r\n'
 
 local retryRequest = function (failedFunction, successCallback)
 	print("HTTP request failed...")
@@ -13,15 +13,18 @@ local retryRequest = function (failedFunction, successCallback)
 end
 
 subscribe('configReady', function (config)
-	dispatch('printHeader', { 'Fetching data...', 'Bus '..config['lineNumber']..' comes' })
-
 	getTiming = function (onSuccess)
-		local url = timingUrl..'?stop_id='..config['stopCode']
+		local url = timingUrl..'?stop_id='..config.timing.stopCode
+		node.task.post(function ()
+
+		dispatch('printHeader', { 'Fetching data...', 'Line '..config.timing.lineNumber })
+		dispatch('printLine', 'Stop code '..config.timing.stopCode)
+
 		print('Requesting', url)
 		
 		http.get(
 			url,
-			headers,
+			'Content-Type: application/json\r\n',
 			function (code, data)
 				if (code < 0) then
 					print('Failed request', code)
@@ -38,24 +41,17 @@ subscribe('configReady', function (config)
 	end
 
 	subscribe('wifiConnected', function ()
-		node.task.post(function ()
-			local foundLine = false
-
 			getTiming(function (busTimingJson)
 				for i, line in ipairs(busTimingJson['virtual_panel_data']['lines']) do
-					if (line['name'] == config['lineNumber']) then
-						foundLine = true
+					if (line['name'] == config.timing.lineNumber) then
 						for j, car in ipairs(line['cars']) do
 							dispatch('printLine', car['departure_time'])
 						end
-						break
+						return
 					end
 				end
 
-				if (not foundLine) then
-					dispatch('printHeader', { 'Badly configured', 'stop and line' })
-				end
-
+				dispatch('printHeader', { 'Badly configured', 'stop and line' })
 				collectgarbage()
 				print('HEAP AFTER REQUEST', node.heap())
 			end)

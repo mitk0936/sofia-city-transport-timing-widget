@@ -5,14 +5,10 @@ require('file')
 require('event_dispatcher')
 
 local extractJsonFromPayload = function (payload)
+	print(payload)
 	local json = payload:match('(%b{})')
-	local parsed, json = pcall(cjson.decode, json) -- WARN: In newest firmware version -> sjson
-	
-	if (not parsed) then
-		return { }
-	end
-
-	return json
+	local parsed, parsedJson = pcall(cjson.decode, json) -- WARN: In newest firmware version -> sjson
+	return ((not parsed) and {} or parsedJson)
 end
 
 subscribe('sendFile', function (data)
@@ -39,6 +35,23 @@ subscribe('sendFile', function (data)
 			end
 		end
 		conn:close()
+	end)
+end)
+
+subscribe('sendResponse', function (data)
+	data.conn:send('HTTP/1.1 500 INTERNAL SERVER ERROR\r\n\r\n', function ()
+		data.conn:send('Content-type: '..data.contentType, function ()
+			data.conn:send(data.response, function ()
+				data.onComplete()
+				data.conn:close()
+			end)
+		end)
+	end)
+end)
+
+subscribe('throwServerError', function (data)
+	data.conn:send('HTTP/1.1 500 INTERNAL SERVER ERROR\r\n\r\n', function ()
+		data.conn:close()
 	end)
 end)
 
