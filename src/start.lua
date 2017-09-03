@@ -1,10 +1,7 @@
-print('INITIAL HEAP: ', node.heap())
-
 require('file')
 require('cjson') -- WARN: In newest firmware version -> sjson
 require('wifi')
 require('tmr')
-
 require('utils')
 require('event_dispatcher')
 require('display')
@@ -20,12 +17,12 @@ if (file.open('config.json')) then
 
 	config = tableMerge({
 		wifi = {
-			ssid = 'default__',
-			pwd = 'default__'
+			ssid = 'wifi-network',
+			pwd = 'wifi-network'
 		},
 		ap = {
-			ssid = 'default__',
-			pwd = 'default__'
+			ssid = 'config-bus',
+			pwd = 'config-bus'
 		},
 		timing = {
 			lineNumber = '99999',
@@ -40,7 +37,7 @@ if (file.open('config.json')) then
 	wifi.sta.config(config.wifi.ssid, config.wifi.pwd) -- WARN: In newest firmware version -> { ssid = config.wifi.ssid, pwd = config.wifi.pwd or '' }
 	wifi.ap.config({ ssid = config.ap.ssid, pwd = config.ap.pwd })
 
-	dispatch('printHeader', { 'AP | WIFI', config.ap.ssid..' | '..config.wifi.ssid })
+	dispatch('printHeader', { 'AP '..config.ap.ssid, 'WIFI '..config.wifi.ssid })
 	wifi.sta.connect()
 
 	dispatch('wifiConfigured', nil, true)
@@ -55,6 +52,6 @@ if (file.open('config.json')) then
 		end
 	end)
 else
-	dispatch('printHeader', { 'No configuration', 'Cannot load config.json' })
+	dispatch('printHeader', { 'Cannot load', 'config.json' })
 	print('Cannot open config.json.')
 end

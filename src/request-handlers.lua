@@ -7,7 +7,6 @@ local updateConfigFile = function (newConfig, onSuccess, onError)
 	local serialized, encodedJson = pcall(cjson.encode, newConfig)
 	if (serialized) then
 		if (file.open('config.json', 'w+')) then
-			print(encodedJson)
 			file.write(encodedJson)
 			file.close()
 			onSuccess()
@@ -24,8 +23,6 @@ subscribe('configReady', function (config)
 		print('received on url: ', eventData.url)
 		if (eventData.url == 'config-timing') then
 			local newConfig = tableMerge(config, eventData.json)
-
-			print('new__', cjson.encode(eventData.json))
 			
 			updateConfigFile(newConfig, function ()
 				dispatch('sendResponse', {
@@ -40,6 +37,7 @@ subscribe('configReady', function (config)
 				})
 			end)
 		else
+			print('URL IS', eventData.url)
 			dispatch('sendFile', {
 				conn = eventData.conn,
 				filename = 'index.htm',

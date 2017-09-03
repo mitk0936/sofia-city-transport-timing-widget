@@ -77,20 +77,22 @@
 				document.getElementById('config-form').addEventListener('submit', function (e) {
 					e.preventDefault();
 
-					var data = {
-						timing: {
-							lineNumber: handleEmptyFields(document.getElementById('lineNumber').value),
-							stopCode: handleEmptyFields(document.getElementById('stopCode').value),
-						},
-						wifi: {
-							ssid: handleEmptyFields(document.getElementById('ssidName').value),
-							pwd: handleEmptyFields(document.getElementById('wifiPass').value)
-						},
-						ap: {
-							ssid: handleEmptyFields(document.getElementById('ap_ssidName').value),
-							pwd: handleEmptyFields( document.getElementById('ap_wifiPass').value)
-						}
+					var ap = {
+						ssid: handleEmptyFields(document.getElementById('ap_ssidName').value),
+						pwd: handleEmptyFields( document.getElementById('ap_wifiPass').value)
+					}, wifi = {
+						ssid: handleEmptyFields(document.getElementById('ssidName').value),
+						pwd: handleEmptyFields(document.getElementById('wifiPass').value)
+					}, timing = {
+						lineNumber: handleEmptyFields(document.getElementById('lineNumber').value),
+						stopCode: handleEmptyFields(document.getElementById('stopCode').value)
 					}
+
+					var data = { }
+
+					ap.ssid && ap.pwd && (data.ap = ap);
+					wifi.ssid && wifi.pwd && (data.wifi = wifi);
+					timing.lineNumber && timing.stopCode && (data.timing = timing);
 
 					!submitting && (submitting = true) && fetch('/config-timing', data, 'POST', function onSuccess (responseText) {
 						submitting = false;

@@ -6,8 +6,6 @@ fetching data from Sofia city-transport API and showing timetable on oled displa
 Using NodeMcu http://nodemcu.com
 and SSD-1331 oled display
 
-Using API endpoints, exposed here: https://github.com/ivkos/Sofia-Public-Transport-API
-
 # Wiring:
 
 <p align="center">
