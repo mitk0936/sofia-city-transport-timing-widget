@@ -9,7 +9,7 @@ and SSD-1331 oled display
 # Wiring:
 
 <p align="center">
-	<img src="IMG_20160804_210255.jpg" width="450"/>
+	<img src="__info/IMG_20160804_210255.jpg" width="450"/>
 </p>
 
 <table>
