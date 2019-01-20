@@ -18,6 +18,8 @@ if (ok) then
   wifi_helper.wifi_config_ap(config.ap.ssid, config.ap.pwd);
 
   local net_http_server = require('lib/net-http-server');
+  local net_helper = require('lib/net');
+  net_helper.dns_liar(wifi.ap.getip());
 
   net_http_server.start(function (request)
     if (request.url == 'config-timing') then
@@ -53,8 +55,6 @@ if (ok) then
     2000,
     function (ip)
       print('Connected, IP is '..ip);
-      local net_helper = require('lib/net');
-      net_helper.dns_liar(wifi.sta.getip());
       bus_time_api.start(config.timing.lineNumber, config.timing.stopCode);
     end
   );
