@@ -1,0 +1,14 @@
+{
+	"wifi": {
+		"ssid": "***",
+		"pwd": "***"
+	},
+	"ap": {
+		"ssid": "bus-timing",
+		"pwd": "bus-timing"
+	},
+	"timing": {
+		"lineNumber": "314",
+		"stopCode": "0968"
+	}
+}

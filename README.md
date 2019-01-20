@@ -101,9 +101,9 @@ Before uploading the file, configurate your wifi network at config.json
 # Firmware:
 
 Using Lua firmware for nodemcu, built here: http://nodemcu-build.com/
-with global modules: cjson, file, gpio, http, net, node, spi, tmr, uart, ucg, wifi
+with global modules: file gpio http net node sjson spi tmr uart ucg wifi
 
-The binary of the firmware is imcluded in the repo.
+The binary of the firmware is included in the repo.
 <br/>
 
 For flashing, flash esp_init_data_default.bin at:
