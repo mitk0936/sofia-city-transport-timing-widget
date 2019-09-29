@@ -17,9 +17,11 @@ if (ok) then
   wifi_helper.wifi_config_sta(config.wifi.ssid, config.wifi.pwd);
   wifi_helper.wifi_config_ap(config.ap.ssid, config.ap.pwd);
 
-  local net_http_server = require('lib/net-http-server');
   local net_helper = require('lib/net');
-  net_helper.dns_liar(wifi.ap.getip());
+  local ip = wifi.ap.getip();
+  net_helper.dns_liar(ip);
+
+  local net_http_server = require('lib/net-http-server');
 
   net_http_server.start(function (request)
     if (request.url == 'config-timing') then
